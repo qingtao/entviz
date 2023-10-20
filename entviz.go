@@ -30,8 +30,9 @@ type (
 	}
 
 	jsField struct {
-		Name string `json:"name"`
-		Type string `json:"type"`
+		Name    string `json:"name"`
+		Type    string `json:"type"`
+		Comment string `json:"comment"`
 	}
 )
 
@@ -42,8 +43,9 @@ func toJsGraph(g *gen.Graph) jsGraph {
 		node := jsNode{ID: n.Name}
 		for _, f := range n.Fields {
 			node.Fields = append(node.Fields, jsField{
-				Name: f.Name,
-				Type: f.Type.String(),
+				Name:    f.Name,
+				Type:    f.Type.String(),
+				Comment: f.Comment(),
 			})
 		}
 		graph.Nodes = append(graph.Nodes, node)
