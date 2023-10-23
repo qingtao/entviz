@@ -28,6 +28,7 @@ type (
 		To    string `json:"to"`
 		Label string `json:"label"`
 		Ref   string `json:"ref"`
+		Bidi  bool   `json:"bidi"`
 	}
 
 	jsField struct {
@@ -55,6 +56,7 @@ func toJsGraph(g *gen.Graph) jsGraph {
 				From:  n.Name,
 				To:    e.Type.Name,
 				Label: e.Name,
+				Bidi:  e.Bidi,
 			}
 			if e.IsInverse() {
 				if e.Ref != nil {

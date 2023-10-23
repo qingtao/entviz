@@ -94,7 +94,7 @@
         edge = {
           ...e,
           physics: false,
-          arrows: "to",
+          arrows: (counter % 2 == 0) ? "from": "to",
           type: 'curvedCW',
           selfReference: {
             size: (counter + 1) * 10,
@@ -105,8 +105,11 @@
       } else {
       edge = { ...e, type: 'curvedCW', physics: false, arrows: "to", smooth: { type: 'curvedCW', roundness: Math.pow(-1, counter) * 0.2 * counter } }
       }
-      if (e.ref !== '') {
+      if (e.ref !== '' && e.to !== e.from) {
         edge.dashes = true
+      }
+      if (e.bidi) {
+        edge.arrows = 'to;from'
       }
       return edge
     }));
@@ -133,7 +136,7 @@
                     nodeSpacing: 200,
                     sortMethod: 'directed',
                     shakeTowards: 'roots',
-                    blockShifting: false,
+                    blockShifting: true,
                     edgeMinimization: false,
                     treeSpacing: 300
         },
