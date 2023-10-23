@@ -89,8 +89,9 @@
     const edges = new vis.DataSet((entGraph.edges || []).map(e => {
       const counter = (edgesCounter[edgeKey(e)] || 0) + 1;
       edgesCounter[edgeKey(e)] = counter;
+      let edge = {};
       if (e.from === e.to) {
-        return {
+        edge = {
           ...e,
           physics: false,
           arrows: "to",
@@ -101,13 +102,20 @@
             renderBehindTheNode: false
           }
         }
+      } else {
+      edge = { ...e, type: 'curvedCW', physics: false, arrows: "to", smooth: { type: 'curvedCW', roundness: Math.pow(-1, counter) * 0.2 * counter } }
       }
-      return { ...e, type: 'curvedCW', physics: false, arrows: "to", smooth: { type: 'curvedCW', roundness: Math.pow(-1, counter) * 0.2 * counter } }
+      if (e.ref !== '') {
+        edge.dashes = true
+      }
+      return edge
     }));
+
     const options = {
       manipulation: false,
       edges: {
         physics: false,
+        selectionWidth: function(width){return width*2;},
         smooth: { type: 'curvedCW', roundness: 0.2 },
         arrows: "to",
       },
@@ -118,10 +126,16 @@
         font: { align: "center" },
       },
       layout: {
-        improvedLayout: true,
+        improvedLayout: false,
         hierarchical: {
-          enabled: true,
-          levelSeparation: 250,
+                enabled: false,
+                    levelSeparation: 250,
+                    nodeSpacing: 200,
+                    sortMethod: 'directed',
+                    shakeTowards: 'roots',
+                    blockShifting: false,
+                    edgeMinimization: false,
+                    treeSpacing: 300
         },
       },
       physics: {

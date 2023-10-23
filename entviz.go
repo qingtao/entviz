@@ -27,6 +27,7 @@ type (
 		From  string `json:"from"`
 		To    string `json:"to"`
 		Label string `json:"label"`
+		Ref   string `json:"ref"`
 	}
 
 	jsField struct {
@@ -50,14 +51,17 @@ func toJsGraph(g *gen.Graph) jsGraph {
 		}
 		graph.Nodes = append(graph.Nodes, node)
 		for _, e := range n.Edges {
-			if e.IsInverse() {
-				continue
-			}
-			graph.Edges = append(graph.Edges, jsEdge{
+			je := jsEdge{
 				From:  n.Name,
 				To:    e.Type.Name,
 				Label: e.Name,
-			})
+			}
+			if e.IsInverse() {
+				if e.Ref != nil {
+					je.Ref = e.Ref.Name
+				}
+			}
+			graph.Edges = append(graph.Edges, je)
 		}
 
 	}
